@@ -22,7 +22,7 @@ $http.beforeRequest = function(option) {
 $http.afterRequest = function() {
 	uni.hideLoading()
 }
-
+ 
 // 封装弹框的方法
 uni.$showMeg = function(title = '数据请求失败！', duration = 1500) {
 	uni.showToast({
