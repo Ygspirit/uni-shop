@@ -1,5 +1,10 @@
 <template>
 	<view>
+		<!-- 使用自定义的搜索组件 -->
+		<view class="search-box">
+			<my-search @gotoSearch="gotoSearch"></my-search>
+		</view>
+
 		<!-- 轮播图的区域 -->
 		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
 			<swiper-item v-for="(item,index) in swiperList" :key="index">
@@ -32,7 +37,8 @@
 
 					<!-- 右侧盒子 -->
 					<view class="right-img-box">
-						<navigator class="right-img-item" :url="item2.url" v-for="(item2,i2) in item.product_list" :key="i2" v-if="i2 !== 0">
+						<navigator class="right-img-item" :url="item2.url" v-for="(item2,i2) in item.product_list"
+							:key="i2" v-if="i2 !== 0">
 							<image :src="item2.image_src" mode="widthFix" :style="{width: item2.image_width + 'rpx'}">
 							</image>
 						</navigator>
@@ -115,12 +121,25 @@
 					})
 				})
 				this.floorList = res.message
+			},
+
+			// 跳转搜索页面
+			gotoSearch() {
+				uni.navigateTo({
+					url: '/subpkg/search/search'
+				})
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	.search-box {
+		position: sticky;
+		top: 0;
+		z-index: 999;
+	}
+
 	swiper {
 		height: 330rpx;
 
