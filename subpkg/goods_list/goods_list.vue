@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="goods-list">
-			<view v-for="(goods,index) in goodsList" :key="index" @click="gotoDetail(item)">
+			<view v-for="(goods,index) in goodsList" :key="index" @click="gotoDetail(goods)">
 				<my-goods :goods="goods"></my-goods>
 			</view>
 		</view>
@@ -37,7 +37,7 @@
 			this.queryObj.query = options.query || ''
 			this.queryObj.cid = options.cid || ''
 
-			this.goodsList()
+			this.getGoodsList()
 		},
 		methods: {
 			async getGoodsList(cb) {
@@ -46,10 +46,12 @@
 
 				const {
 					data: res
-				} = uni.$http.get('/api/public/v1/goods/search', this.queryObj)
+				} = await uni.$http.get('/api/public/v1/goods/search', this.queryObj)
 
 				this.isLoading = false
 				cb && cb()
+
+				// console.log(res);
 
 				if (res.meta.status !== 200) return uni.$showMeg()
 

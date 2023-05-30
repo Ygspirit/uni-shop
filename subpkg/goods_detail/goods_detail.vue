@@ -29,6 +29,11 @@
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations,
+		mapGetters
+	} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -57,7 +62,15 @@
 				]
 			}
 		},
+		computed: {
+			// 调用mapState 方法，把m_cart 模块中的cart数组映射到当前页面中，作为计算属性来使用
+			// ...mapState('模块的名称',['要映射的数据名称1'],['要映射的数据名称2'])
+			...mapState('m_cart', ['cart']),
+			...mapGetters('m_cart', ['total'])
+		},
+
 		methods: {
+			...mapMutations('m_cart', ['addToCart']),
 			async getGoodsDetail(goods_id) {
 				const {
 					data: res
@@ -78,14 +91,43 @@
 					urls: this.goods_info.pics.map(x => x.pics_big)
 				})
 			},
-			
-			onclick(e){
-				if(e.content.text ==='购物车'){
+
+			onClick(e) {
+				if (e.content.text === '购物车') {
 					uni.switchTab({
-						url:'/pages/cart/cart'
+						url: '/pages/cart/cart'
 					})
 				}
+			},
+			buttonClick(e) {
+				if (e.content.text === '加入购物车') {
+					const goods = {
+						goods_id: this.goods_info.goods_id,
+						goods_name: this.goods_info.goods_name,
+						goods_price: this.goods_info.goods_price,
+						goods_count: 1,
+						goods_small_logo: this.goods_info.goods_small_logo,
+						goods_state: true
+					}
+
+					this.addToCart(goods)
+				}
 			}
+		},
+		watch: {
+			// 定义一个total侦听器，指向一个配置对象
+			total: {
+				// handler 属性用来定义侦听器的function处理函数
+				handler(newCount) {
+					const findResult = this.options.find(x => x.text === '购物车')
+					if (findResult) {
+						findResult.info = newCount
+					}
+				},
+				// immediate 属性用来声明此侦听器，是否在页面初次加载完毕之后立即调用
+				immediate: true
+			}
+
 		},
 		onLoad(options) {
 			const goods_id = options.goods_id

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import store from './store/store.js'
 
 
 // 导入网络请求的包
@@ -22,7 +23,7 @@ $http.beforeRequest = function(option) {
 $http.afterRequest = function() {
 	uni.hideLoading()
 }
- 
+
 // 封装弹框的方法
 uni.$showMeg = function(title = '数据请求失败！', duration = 1500) {
 	uni.showToast({
@@ -38,6 +39,8 @@ Vue.config.productionTip = false
 App.mpType = 'app'
 
 const app = new Vue({
-	...App
+	...App,
+	store
+
 })
 app.$mount()
